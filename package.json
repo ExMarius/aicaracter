@@ -1,0 +1,37 @@
+{
+  "name": "aicaracter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Gicu — personaj AI haotic pentru Minecraft 1.21.4. Vorbește română, are voce, sapă, construiește și face conținut pentru YouTube.",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.10"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "repl": "node src/index.js --repl --offline",
+    "doctor": "node scripts/doctor.js",
+    "test": "node --test",
+    "check": "node scripts/check-syntax.js"
+  },
+  "keywords": [
+    "minecraft",
+    "mineflayer",
+    "ai",
+    "llm",
+    "youtube",
+    "romana",
+    "1.21.4"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "mineflayer": "^4.39.0",
+    "mineflayer-armor-manager": "^2.0.1",
+    "mineflayer-collectblock": "^1.6.0",
+    "mineflayer-pathfinder": "^2.4.5",
+    "mineflayer-tool": "^1.2.0",
+    "msedge-tts": "^2.1.1",
+    "vec3": "^0.2.0"
+  }
+}

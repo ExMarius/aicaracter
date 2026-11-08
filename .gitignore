@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+*.log
+logs/
+data/
+audio-out/
+voice-out/
+auth-cache/
+.minecraft/
+.DS_Store
+Thumbs.db
