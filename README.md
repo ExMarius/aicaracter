@@ -4,6 +4,8 @@
 
 Un coechipier AI care **intră pe server ca un jucător normal**, vorbește română cu voce, sapă, construiește, craftează, se bate cu monștri, dansează și comentează tot ce se întâmplă. Făcut pentru seriale de YouTube: îi spui în chat „fă-mi o casă" și se apucă de treabă.
 
+> **Nu ești tehnic?** Citește **[GHID-RAPID.md](GHID-RAPID.md)** (explicat fără termeni de programare) și dă dublu-click pe **`start.bat`**. Nu e nici mod, nici plugin: e un program care se conectează la server ca un jucător.
+
 ```
 tu (în chat):  „Gicu, taie 10 lemne și fă-ne o casă"
 Gicu (voce):   „Arhitectul a sosit! Am un plan. Planul e bun. Nu e bun, dar hai să vedem."
@@ -201,6 +203,8 @@ npm run check      # verifică sintaxa
 ## Structura proiectului
 
 ```
+start.bat / start.sh    pornire cu dublu-click
+GHID-RAPID.md           ghid fără termeni tehnici
 src/
   index.js              pornește tot (Minecraft sau REPL)
   config.js             citirea .env
