@@ -73,6 +73,8 @@ MC_OWNER=NumeleTauDinMinecraft
 ```
 
 > **Server pe Pterodactyl sau alt panou de găzduire?** Nu instalezi nimic pe panou — iei adresa și portul din Consolă/Network și le pui în `.env`. Ghid pas cu pas, cu toate erorile tipice: **[docs/PTERODACTYL.md](docs/PTERODACTYL.md)**.
+>
+> **Vrei ca Gicu să fie jucător permanent, găzduit 24/7?** Vezi **[docs/HOSTING.md](docs/HOSTING.md)** (panel cu egg Node.js, VPS, Raspberry Pi) și rulează `bash deploy/install-hosted.sh`.
 
 ### 4. Alege un creier (LLM)
 
@@ -209,6 +211,7 @@ npm run check      # verifică sintaxa
 ```
 start.bat / start.sh    pornire cu dublu-click
 GHID-RAPID.md           ghid fără termeni tehnici
+deploy/                 instalare pe găzduire Linux (systemd / pm2 / nohup)
 src/
   index.js              pornește tot (Minecraft sau REPL)
   config.js             citirea .env

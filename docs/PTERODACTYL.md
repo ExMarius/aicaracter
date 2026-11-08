@@ -1,5 +1,7 @@
 # Server pe Pterodactyl — cum îl punem pe Gicu acolo
 
+> Vrei ca Gicu să fie permanent pe server, găzduit 24/7? Vezi și **[HOSTING.md](HOSTING.md)**.
+
 ## Pe scurt
 
 **Nu instalezi nimic pe panou.** Gicu e un program care rulează pe PC-ul tău și se conectează la serverul din Pterodactyl exact ca Minecraft-ul tău: cu adresă și port.
