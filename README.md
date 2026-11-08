@@ -196,7 +196,9 @@ Detalii tehnice, cum adaugi o unealtă nouă, cum modifici promptul: **[docs/ARH
 npm start          # pornește botul
 npm run repl       # vorbește cu el în terminal
 npm run doctor     # verifică tot setup-ul
-npm test           # 43 de teste (fără Minecraft, fără internet)
+npm run test-server # test live: ping + conectare reală pe serverul tău
+npm run deploy:sftp # urcă botul pe un server din panel (egg Node.js)
+npm test           # 52 de teste (fără Minecraft, fără internet)
 npm run check      # verifică sintaxa
 ```
 

@@ -13,7 +13,9 @@
     "repl": "node src/index.js --repl --offline",
     "doctor": "node scripts/doctor.js",
     "test": "node --test",
-    "check": "node scripts/check-syntax.js"
+    "check": "node scripts/check-syntax.js",
+    "test-server": "node scripts/live-check.js",
+    "deploy:sftp": "node scripts/deploy-sftp.js"
   },
   "keywords": [
     "minecraft",
@@ -32,6 +34,7 @@
     "mineflayer-pathfinder": "^2.4.5",
     "mineflayer-tool": "^1.2.0",
     "msedge-tts": "^2.1.1",
+    "ssh2": "^1.17.0",
     "vec3": "^0.2.0"
   }
 }

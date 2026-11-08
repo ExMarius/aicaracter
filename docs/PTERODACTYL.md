@@ -68,6 +68,42 @@ Dublu-click pe **`verifica.bat`**. Caută linia:
 
 ---
 
+## Test live, în 10 secunde (înainte să filmezi)
+
+```bash
+npm run test-server
+```
+
+Îți spune, fără să intre cu botul în joc:
+
+```
+🔌 Test live: node-07.hostul-tau.ro:25678
+
+  ✓ Serverul răspunde la ping.
+  versiune: 1.21.4 (protocol 769)
+  ✓ Jucători: 0 / 20
+  MOTD: Un server facut de cap
+
+🎮 Încerc conectarea ca jucător "Gicu" (offline)...
+
+  ✓ CONECTAT în 1.8s. Botul poate intra pe server.
+    Poziție: 128 64 -32 | viață 20/20 | overworld
+```
+
+Iar dacă nu poate intra, îți spune **motivul exact și ce să schimbi**:
+
+```
+  ✗ Nu a intrat. Serverul m-a dat afară: "You are not whitelisted on this server!"
+
+Ce faci:
+  → Serverul are whitelist.
+  → În Consola panoului scrie:  whitelist add Gicu
+```
+
+Dacă vrei doar partea de ping (fără conectare): `npm run test-server -- --ping-only`.
+
+---
+
 ## Pasul 4 — Pornește
 
 Dublu-click pe **`start.bat`**. În fereastra neagră ar trebui să vezi:
@@ -164,6 +200,29 @@ Ai nevoie de **un al doilea server separat**, tot în panou (dacă adminul îți
    ```
 5. **Startup command** (în tab-ul Startup al serverului): `npm start`
 
+### Cum urci fișierele acolo (SFTP)
+
+Panoul îți dă datele SFTP în pagina serverului (la HidenCloud: host `jacob.hidencloud.com`, port `2022`, user `mariusuke-184939.d496911d`). Le pui în `.env`:
+
+```env
+SFTP_HOST=jacob.hidencloud.com
+SFTP_PORT=2022
+SFTP_USER=mariusuke-184939.d496911d
+SFTP_PASS=parola_ta
+REMOTE_DIR=.
+```
+
+Apoi:
+
+```bash
+npm run deploy:sftp -- --dry     # vezi ce s-ar urca (fără să urce nimic)
+npm run deploy:sftp             # urcă proiectul
+```
+
+Scriptul sare peste `node_modules`, `.git`, `logs/`, `data/` și `.env` (adică peste secrete). Dacă vrei să urci și `.env`, adaugă `-- --with-env` — dar atunci cheia API ajunge pe host, așa că mai bine îl creezi direct din File Manager.
+
+După upload, în **Consolă**: `npm install`, apoi creează `.env` și dă **Restart**.
+
 ### Ce pierzi dacă rulează pe panel
 - **Vocea nu se aude** — panoul nu are boxe. Gicu va vorbi doar în chat.
 - Pentru filmare, tot varianta locală e mai bună: vocea se aude pe PC-ul tău și intră în OBS.
@@ -189,3 +248,18 @@ MC_VERSION=auto
 ```
 
 Apoi `verifica.bat` → `start.bat`. Dacă ceva nu merge, eroarea din fereastra neagră îți spune exact care dintre cele 6 cauze de mai sus e.
+
+---
+
+## Securitate — citește o dată
+
+**Parola SFTP nu are ce căuta într-un fișier din repo**, nici măcar într-un workflow GitHub. Repo-urile publice sunt indexate de boți în minute, iar cine are parola are acces complet la fișierele serverului (inclusiv `server.properties`, lumi, pluginuri).
+
+Dacă ai pus vreodată `SFTP_PASS` sau `SFTP_PASS_BACKUP` într-un `.yml` commis:
+
+1. **Schimbă parola acum** din panoul de găzduire (sau cere adminului resetarea).
+2. Șterge fișierul din repo: `git rm .github/workflows/hidencloud-sftp.yml` și fă commit (ștergerea nu scoate parola din istoric, dar oprește expunerea curentă).
+3. Pune parola în **GitHub → Settings → Secrets and variables → Actions** ca `SFTP_PASS` și folosește-o ca `${{ secrets.SFTP_PASS }}`.
+4. Ține parola doar în `.env` local (e în `.gitignore`) sau în secretul de mai sus.
+
+Același principiu pentru cheia LLM: în `.env`, niciodată în cod.

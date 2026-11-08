@@ -3,7 +3,8 @@
 Începe mereu cu:
 
 ```bash
-npm run doctor
+npm run doctor        # verifică setările, vocea, legătura cu serverul
+npm run test-server   # test live: intră pe server ca jucător și îți spune de ce nu poate
 ```
 
 Îți spune în 10 secunde dacă lipsesc cheia API, vocea, serverul sau playerul audio.
