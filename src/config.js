@@ -62,16 +62,23 @@ const list = (key, fallback = []) => {
 
 export function buildConfig(overrides = {}) {
   const owners = list('MC_OWNERS', list('MC_OWNER', ['ExMarius']));
+  // MC_VERSION=auto → lăsăm mineflayer să negocieze versiunea din ping.
+  // Util pe paneluri (Pterodactyl) unde nu știi exact ce versiune rulează.
+  const rawVersion = str('MC_VERSION', '1.21.4').trim();
+  const version = rawVersion.toLowerCase() === 'auto' ? null : rawVersion;
   const cfg = {
     minecraft: {
       host: str('MC_HOST', 'localhost'),
       port: num('MC_PORT', 25565),
-      version: str('MC_VERSION', '1.21.4'),
+      version,
+      versionRaw: rawVersion,
       username: str('MC_USERNAME', 'Gicu'),
       auth: str('MC_AUTH', 'offline').toLowerCase() === 'microsoft' ? 'microsoft' : 'offline',
       owners: owners.map((o) => o.toLowerCase()),
       allowAllPlayers: bool('MC_ALLOW_ALL_PLAYERS', false),
       password: str('MC_PASSWORD', ''),
+      // Comandă de autentificare personalizată, ex: "/register {parola} {parola}"
+      authCommand: str('MC_AUTH_COMMAND', ''),
       reconnect: bool('MC_RECONNECT', true),
     },
     ai: {

@@ -39,6 +39,18 @@ Trebuie să ai un server pornit. Cel mai simplu: joci pe un server de-al tău (p
 > Dacă serverul e pe același PC cu jocul tău, adresa e `localhost`.
 > Dacă e găzduit (Aternos etc.), adresa e cea pe care o primești de la ei.
 
+### Dacă serverul e pe Pterodactyl (sau alt panou de găzduire)
+
+Nu instalezi nimic pe panou. În panou, la **Consolă** sau **Network**, găsești ceva de forma `node-07.hostul-tau.ro:25678`. Aia e adresa pe care o pui în `.env`:
+
+```env
+MC_HOST=node-07.hostul-tau.ro
+MC_PORT=25678
+MC_VERSION=auto
+```
+
+Ghid complet, cu toate erorile posibile (whitelist, online-mode, AuthMe, versiune): **`docs/PTERODACTYL.md`**.
+
 ### Pasul 3 — dublu-click pe **`start.bat`**
 Se deschide o fereastră neagră care:
 1. își instalează singură componentele (prima dată, 1-2 minute),

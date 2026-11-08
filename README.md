@@ -72,6 +72,8 @@ MC_USERNAME=Gicu
 MC_OWNER=NumeleTauDinMinecraft
 ```
 
+> **Server pe Pterodactyl sau alt panou de găzduire?** Nu instalezi nimic pe panou — iei adresa și portul din Consolă/Network și le pui în `.env`. Ghid pas cu pas, cu toate erorile tipice: **[docs/PTERODACTYL.md](docs/PTERODACTYL.md)**.
+
 ### 4. Alege un creier (LLM)
 
 | Variantă | Cost | Setare în `.env` |

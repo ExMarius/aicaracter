@@ -40,3 +40,34 @@ test('deepMerge nu distruge obiectele imbricate', () => {
   const merged = deepMerge({ a: { x: 1, y: 2 }, b: 3 }, { a: { y: 9 }, c: 4 });
   assert.deepEqual(merged, { a: { x: 1, y: 9 }, b: 3, c: 4 });
 });
+
+test('MC_VERSION=auto lasă versiunea să fie detectată de mineflayer', () => {
+  const old = process.env.MC_VERSION;
+  process.env.MC_VERSION = 'auto';
+  try {
+    const cfg = buildConfig();
+    assert.equal(cfg.minecraft.version, null);
+    assert.equal(cfg.minecraft.versionRaw, 'auto');
+  } finally {
+    if (old === undefined) delete process.env.MC_VERSION;
+    else process.env.MC_VERSION = old;
+  }
+});
+
+test('opțiunile pentru panouri (Pterodactyl) sunt citite corect', () => {
+  const old = { ...process.env };
+  process.env.MC_VERSION = '1.21.4';
+  process.env.MC_AUTH_COMMAND = '/cp login {parola}';
+  process.env.MC_PASSWORD = 'secreta';
+  try {
+    const cfg = buildConfig();
+    assert.equal(cfg.minecraft.version, '1.21.4');
+    assert.equal(cfg.minecraft.authCommand, '/cp login {parola}');
+    assert.equal(cfg.minecraft.password, 'secreta');
+  } finally {
+    for (const k of ['MC_VERSION', 'MC_AUTH_COMMAND', 'MC_PASSWORD']) {
+      if (old[k] === undefined) delete process.env[k];
+      else process.env[k] = old[k];
+    }
+  }
+});

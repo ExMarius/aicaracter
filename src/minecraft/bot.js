@@ -12,18 +12,22 @@ const { Movements } = pf;
 /** Pornește botul. Întoarce imediat instanța (nu așteaptă spawn). */
 export function createBot(config, log) {
   const { host, port, username, version, auth } = config.minecraft;
-  log?.info(`Conectare la ${host}:${port} ca "${username}" (${version}, auth: ${auth})...`);
+  log?.info(`Conectare la ${host}:${port} ca "${username}" (${version || 'versiune auto'}, auth: ${auth})...`);
 
-  const bot = mineflayer.createBot({
+  const options = {
     host,
     port,
     username,
-    version,
     auth,
     viewDistance: 'normal',
     hideErrors: false,
     checkTimeoutInterval: 60_000,
-  });
+  };
+  // MC_VERSION=auto (util pe Pterodactyl): fără versiune fixă, mineflayer
+  // negociază protocolul din răspunsul de status al serverului.
+  if (version) options.version = version;
+
+  const bot = mineflayer.createBot(options);
 
   loadPlugins(bot, log);
   return bot;
@@ -79,15 +83,31 @@ export function setupMovements(bot, log) {
   return movements;
 }
 
-/** Autentificare pe serverele cu AuthMe / parolă în chat. */
+/**
+ * Autentificare pe serverele cu AuthMe / parolă în chat (des întâlnite pe
+ * panelurile Pterodactyl). Dacă nu dai o comandă proprie, încercăm și
+ * /register, și /login — serverul îl acceptă pe cel potrivit, celălalt dă
+ * doar un mesaj de eroare inofensiv.
+ */
 export async function loginIfNeeded(bot, config, log) {
-  if (!config.minecraft.password) return;
-  await sleep(1500);
+  const { password, authCommand } = config.minecraft;
+  if (!password && !authCommand) return;
+  await sleep(2500);
+
+  const fill = (cmd) => cmd.replaceAll('{parola}', password).replaceAll('{username}', bot.username);
+
   try {
-    bot.chat(`/login ${config.minecraft.password}`);
-    log?.ok('Trimis /login.');
+    if (authCommand) {
+      bot.chat(fill(authCommand));
+      log?.ok(`Trimis comanda de autentificare: ${fill(authCommand).replace(password || '', '***')}`);
+      return;
+    }
+    bot.chat(`/register ${password} ${password}`);
+    await sleep(1200);
+    bot.chat(`/login ${password}`);
+    log?.ok('Trimis /register și /login (AuthMe).');
   } catch (err) {
-    log?.warn(`Nu am putut trimite /login: ${err.message}`);
+    log?.warn(`Nu am putut trimite autentificarea: ${err.message}`);
   }
 }
 
