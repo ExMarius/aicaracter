@@ -74,7 +74,7 @@ MC_OWNER=NumeleTauDinMinecraft
 
 > **Server pe Pterodactyl sau alt panou de găzduire?** Nu instalezi nimic pe panou — iei adresa și portul din Consolă/Network și le pui în `.env`. Ghid pas cu pas, cu toate erorile tipice: **[docs/PTERODACTYL.md](docs/PTERODACTYL.md)**.
 >
-> **Vrei ca Gicu să fie jucător permanent, găzduit 24/7?** Vezi **[docs/HOSTING.md](docs/HOSTING.md)** (panel cu egg Node.js, VPS, Raspberry Pi) și rulează `bash deploy/install-hosted.sh`.
+> **Vrei ca Gicu să fie jucător permanent, găzduit 24/7?** Vezi **[docs/HOSTING.md](docs/HOSTING.md)**. Pe un VPS de 1 GB RAM / 1 CPU merge lejer (consumă ~135 MB): `bash deploy/setup-vps.sh`.
 
 ### 4. Alege un creier (LLM)
 
@@ -138,6 +138,8 @@ Vocea folosește **Microsoft Edge TTS** — gratuit, fără cont, cu voci român
 Botul rulează pe calculatorul tău și redă sunetul local, deci în OBS trebuie doar să ai activă **Desktop Audio** (sau să redai pe un cablu virtual dacă folosești căști). Vocea intră automat în înregistrare, fără moduri în client.
 
 Fiecare replică e scrisă și în `logs/transcript-AAAA-LL-ZZ.txt` — ai textul gata pentru subtitrări.
+
+> **Voce pentru mai mulți jucători?** Azi vocea se aude pe PC-ul care rulează botul (deci în înregistrare). Pentru ca toți jucătorii să-l audă în joc există 4 variante, cu tot cu ce presupune fiecare: **[docs/VOICE.md](docs/VOICE.md)**.
 
 Instalează `mpv` sau `ffmpeg` dacă ești pe Linux; pe Windows folosește PowerShell (deja prezent). Vezi `docs/TROUBLESHOOTING.md`.
 

@@ -113,6 +113,72 @@ Dacă serverul de Minecraft e pe același VPS, pune `MC_HOST=localhost`.
 
 ---
 
+## VPS mic: 1 GB RAM, 1 CPU — merge?
+
+**Da, confortabil.** Am măsurat procesul real (bot conectat, cu pathfinding, collectblock și armor-manager încărcate):
+
+```
+RSS: 135 MB | heap: 42 MB
+```
+
+Cu tot cu sistemul de operare, încarci cam așa:
+
+| Ce consumă | RAM |
+|---|---|
+| Ubuntu minim | ~200 MB |
+| **Gicu** | **~135-250 MB** (vârf la generarea de chunk-uri) |
+| Total | ~400 MB din 1024 → **~600 MB liberi** |
+
+**CPU:** aproape zero. Gândirea nu se face pe VPS — modelul AI rulează la furnizor (Groq/OpenAI), iar VPS-ul doar trimite text și primește text. Un singur nucleu e mai mult decât suficient.
+
+### Instalare, de pe VPS (3 comenzi)
+
+```bash
+sudo apt update && sudo apt install -y git
+git clone --depth 1 https://github.com/ExMarius/aicaracter.git ~/aicaracter
+bash ~/aicaracter/deploy/setup-vps.sh
+```
+
+Scriptul îți instalează Node.js 22, creează **1 GB de swap** (plasă de siguranță la vârfurile de memorie), clonează proiectul și te întreabă adresa serverului, numele tău și cheia AI. La final îl lasă ca serviciu systemd — pornește singur după reboot și repornește dacă pică.
+
+Verifici că merge:
+
+```bash
+sudo systemctl status gicu
+journalctl -u gicu -f
+```
+
+### Dacă vrei să pui ȘI serverul de Minecraft pe același VPS
+
+Se poate, dar e strâmt la 1 GB. Paper 1.21.4 cu 2 jucători are nevoie de ~700-900 MB. Ca să încapă amândouă:
+
+```bash
+java -Xms384M -Xmx640M -XX:+UseG1GC -jar paper.jar --nogui
+```
+
+Și în `server.properties`:
+
+```properties
+view-distance=5
+simulation-distance=4
+max-players=5
+```
+
+Așteptă-te la lag la generarea de chunk-uri. Pentru un serial curat recomand:
+
+| Unde | Ce |
+|---|---|
+| VPS 1 GB | **doar Gicu** (24/7, fără PC-ul tău) |
+| Panel / Aternos | lumea de Minecraft |
+
+Dacă vrei amândouă pe VPS, urcă la **2 GB RAM** și scapi de griji.
+
+### Ce NU încerca pe 1 CPU / 1 GB
+
+**Ollama sau orice model local.** Un model de 7B are nevoie de ~5 GB RAM și de CPU serios. Pe VPS-ul ăsta folosești obligatoriu un API în cloud (Groq e gratis și rapid).
+
+---
+
 ## Detalii care fac diferența la un „jucător real"
 
 ### Skin
