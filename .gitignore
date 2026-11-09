@@ -16,3 +16,6 @@ plugin/build/
 plugin/.gradle/
 .gradle/
 build/
+
+# artefacte de deploy
+dist/
