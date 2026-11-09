@@ -23,7 +23,7 @@ on:
         type: boolean
         default: true
   push:
-    branches: [main]
+    branches: ['**']
     paths:
       - 'plugin/**'
       - 'scripts/deploy-panel.js'
@@ -64,6 +64,8 @@ jobs:
   deploy:
     name: 2. Urcă pe server
     needs: build
+    # deploy real doar de pe main sau manual; pe branch-uri doar se validează build-ul
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
