@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────
+#  GICU (plugin) — configurare
+#  Faza 0: schelet funcțional + build automat.
+#  Fazele următoare adaugă clientul intern, creierul AI și acțiunile.
+# ─────────────────────────────────────────────────────────────
+
+# La câte secunde scrie în consolă că e activ (0 = deloc)
+status-interval-seconds: 300
+
+# Numele jucătorului care va fi „corpul" lui Gicu
+bot-name: Gicu
+
+# Adresa serverului la care se conectează clientul intern (faza 1).
+# Implicit localhost + portul serverului, adică exact serverul pe care rulează.
+connect-host: localhost
+connect-port: 0
+
+# Setări AI (faza 2)
+ai:
+  base-url: "https://api.groq.com/openai/v1"
+  model: "llama-3.3-70b-versatile"
+  api-key: ""
+  max-steps: 8

@@ -1,0 +1,37 @@
+name: Build plugin (JAR)
+
+on:
+  push:
+    paths:
+      - 'plugin/**'
+      - '.github/workflows/build-plugin.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compilează pluginul Paper 1.21.4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10'
+
+      - name: Build
+        working-directory: plugin
+        run: gradle build --no-daemon --stacktrace
+
+      - name: Urcă jar-ul ca artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gicu-plugin
+          path: plugin/build/libs/*.jar
+          if-no-files-found: error
