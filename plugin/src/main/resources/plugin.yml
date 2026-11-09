@@ -1,0 +1,16 @@
+name: Gicu
+version: '${version}'
+main: ro.aicaracter.gicu.GicuPlugin
+api-version: '1.21'
+authors: [ ExMarius ]
+description: Gicu - personaj AI pentru Minecraft, rulat direct pe server
+website: https://github.com/ExMarius/aicaracter
+commands:
+  gicu:
+    description: Comenzi pentru Gicu
+    usage: /gicu <status|reload>
+    permission: gicu.admin
+permissions:
+  gicu.admin:
+    description: Acces la comenzile Gicu
+    default: op

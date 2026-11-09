@@ -10,3 +10,9 @@ auth-cache/
 .minecraft/
 .DS_Store
 Thumbs.db
+
+# Java / Gradle (plugin)
+plugin/build/
+plugin/.gradle/
+.gradle/
+build/
