@@ -1,6 +1,9 @@
 name: Diagnostic panou (temporar)
 on:
   workflow_dispatch:
+  push:
+    branches: ['**']
+    paths: ['.github/workflows/diag-panel.yml', 'scripts/diag-panel.mjs']
 jobs:
   diag:
     runs-on: ubuntu-latest
