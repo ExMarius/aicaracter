@@ -64,6 +64,16 @@ if (!cfg.panelUrl || !cfg.serverId || !cfg.apiKey) {
   );
 }
 
+if (/^SHA256:/i.test(cfg.apiKey || '')) {
+  fail(
+    'Valoarea din secret începe cu „SHA256:" — asta e AMPRENTA cheii, nu cheia.\n' +
+      '  Cheia reală apare o singură dată, imediat după „Create Credential",\n' +
+      '  și începe de obicei cu „ptlc_".\n' +
+      '  Panou → Account Settings → API Credentials → șterge credențiala veche →\n' +
+      '  Create Credential → Copy imediat → GitHub → Settings → Secrets → PANEL_API_KEY → Update secret.',
+  );
+}
+
 const base = `${cfg.panelUrl}/api/client`;
 const authHeaders = {
   Authorization: `Bearer ${cfg.apiKey}`,

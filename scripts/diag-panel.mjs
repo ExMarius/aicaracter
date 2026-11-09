@@ -57,8 +57,11 @@ const endpoints = [
   [`/api/client/servers/${serverId}`, 'serverul tău'],
 ];
 
-const results = [];
-for (const [path, label] of endpoints) {
+const looksLikeHash = /^SHA256:/i.test(key);
+const results = looksLikeHash
+  ? ['ATENȚIE: secretul începe cu „SHA256:" — este amprenta cheii, nu cheia. Nu are rost să încerc auth.']
+  : [];
+for (const [path, label] of (looksLikeHash ? [] : endpoints)) {
   for (const [vname, mk] of variants) {
     let line;
     try {
