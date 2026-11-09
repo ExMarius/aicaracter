@@ -117,7 +117,20 @@ jobs:
           else
             ARGS="$ARGS --restart"
           fi
-          node scripts/deploy-api.js $ARGS
+          set +e
+          node scripts/deploy-api.js $ARGS 2>&1 | tee /tmp/deploy.log
+          CODE=${PIPESTATUS[0]}
+          if [ "$CODE" -ne 0 ]; then
+            MSG=$(tail -c 1200 /tmp/deploy.log | tr '\n' ' ' | tr -d '\r' | sed 's/%/%25/g')
+            echo "::error title=Deploy esuat::$MSG"
+            {
+              echo "### ❌ Deploy eșuat"
+              echo '```'
+              tail -25 /tmp/deploy.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: Sumar
         if: always()
