@@ -74,6 +74,8 @@ MC_OWNER=NumeleTauDinMinecraft
 
 > **Server pe Pterodactyl sau alt panou de găzduire?** Nu instalezi nimic pe panou — iei adresa și portul din Consolă/Network și le pui în `.env`. Ghid pas cu pas, cu toate erorile tipice: **[docs/PTERODACTYL.md](docs/PTERODACTYL.md)**.
 >
+> **Deploy automat pe server:** pipeline GitHub Actions care compilează pluginul, descarcă Simple Voice Chat, le urcă în `plugins/` prin SFTP și repornește serverul. Vezi **[docs/AUTO-DEPLOY.md](docs/AUTO-DEPLOY.md)**.
+
 > **Vrei ca Gicu să fie jucător permanent, găzduit 24/7?** Vezi **[docs/HOSTING.md](docs/HOSTING.md)**. Pe un VPS de 1 GB RAM / 1 CPU merge lejer (consumă ~135 MB): `bash deploy/setup-vps.sh`.
 
 ### 4. Alege un creier (LLM)
