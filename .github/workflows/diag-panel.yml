@@ -1,9 +1,6 @@
-name: Diagnostic panou (temporar)
+name: Verifică cheia API (diagnostic)
 on:
   workflow_dispatch:
-  push:
-    branches: ['**']
-    paths: ['.github/workflows/diag-panel.yml', 'scripts/diag-panel.mjs']
 jobs:
   diag:
     runs-on: ubuntu-latest

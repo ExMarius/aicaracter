@@ -97,7 +97,14 @@ async function api(method, endpoint, { json, raw, timeoutMs = 60_000 } = {}) {
     } catch {
       data = null;
     }
-    if (res.status === 401) fail('Cheia API e respinsă (401). Verifică PANEL_API_KEY.');
+    if (res.status === 401)
+      fail(
+        'Cheia API e respinsă (401).\n' +
+          '  Cauza cea mai frecventă: ai copiat valoarea din lista de credențiale,\n' +
+          '  care arată ca „SHA256:..." și e doar amprenta cheii, nu cheia.\n' +
+          '  Cheia reală apare O SINGURĂ DATĂ, imediat după „Create Credential"\n' +
+          '  (începe de obicei cu „ptlc_"). Șterge credențiala și creează alta, apoi copiază imediat.',
+      );
     if (res.status === 403) fail('Cheia nu are voie la acest server (403). Verifică SERVER_ID.');
     if (res.status === 404) fail(`Endpoint inexistent (404): ${endpoint}. Verifică SERVER_ID.`);
     if (res.status === 429) fail('Prea multe cereri către panel (429). Așteaptă un minut.');
