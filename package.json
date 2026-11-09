@@ -15,7 +15,9 @@
     "test": "node --test",
     "check": "node scripts/check-syntax.js",
     "test-server": "node scripts/live-check.js",
-    "deploy:sftp": "node scripts/deploy-sftp.js"
+    "deploy:sftp": "node scripts/deploy-sftp.js",
+    "deploy:api": "node scripts/deploy-api.js",
+    "fetch:svc": "node scripts/fetch-svc.mjs"
   },
   "keywords": [
     "minecraft",

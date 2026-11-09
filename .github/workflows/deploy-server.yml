@@ -3,12 +3,12 @@ name: Deploy pe server (plugin + Simple Voice Chat)
 # Ce face:
 #   1. compilează pluginul Gicu (Paper 1.21.4)
 #   2. descarcă ultimul Simple Voice Chat compatibil de pe Modrinth
-#   3. le urcă pe server prin SFTP
-#   4. repornește serverul prin API-ul panoului (Pterodactyl)
+#   3. le urcă pe server prin API-ul panoului (fără SFTP)
+#   4. repornește serverul și citește logul ca să confirme
 #
-# Secrete necesare (Settings → Secrets and variables → Actions):
-#   SFTP_HOST, SFTP_PORT, SFTP_USER, SFTP_PASS
-#   PANEL_URL, SERVER_ID, PANEL_API_KEY   (pentru restart automat)
+# Un singur secret necesar: PANEL_API_KEY
+#   Settings → Secrets and variables → Actions → New repository secret
+# Opțional (variabile, nu secrete): PANEL_URL, SERVER_ID
 # Ghid: docs/AUTO-DEPLOY.md
 
 on:
@@ -26,7 +26,7 @@ on:
     branches: ['**']
     paths:
       - 'plugin/**'
-      - 'scripts/deploy-panel.js'
+      - 'scripts/deploy-api.js'
       - 'scripts/fetch-svc.mjs'
       - '.github/workflows/deploy-server.yml'
 
@@ -67,6 +67,9 @@ jobs:
     # deploy real doar de pe main sau manual; pe branch-uri doar se validează build-ul
     if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    env:
+      PANEL_URL: ${{ vars.PANEL_URL || 'https://freepanel.hidencloud.com' }}
+      SERVER_ID: ${{ vars.SERVER_ID || 'd496911d' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -83,13 +86,13 @@ jobs:
           name: plugin-jar
           path: dist
 
-      - name: Verifică secretele
+      - name: Am cheia API?
         id: check
         env:
-          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          PANEL_API_KEY: ${{ secrets.PANEL_API_KEY }}
         run: |
-          if [ -z "$SFTP_HOST" ]; then
-            echo "::warning::Secretele SFTP lipsesc — sar peste deploy. Vezi docs/AUTO-DEPLOY.md"
+          if [ -z "$PANEL_API_KEY" ]; then
+            echo "::warning::Lipsește secretul PANEL_API_KEY — sar peste deploy. Vezi docs/AUTO-DEPLOY.md"
             echo "ok=false" >> "$GITHUB_OUTPUT"
           else
             echo "ok=true" >> "$GITHUB_OUTPUT"
@@ -97,36 +100,37 @@ jobs:
 
       - name: Descarcă Simple Voice Chat
         if: steps.check.outputs.ok == 'true' && (github.event_name != 'workflow_dispatch' || inputs.with_svc)
+        continue-on-error: true
         run: node scripts/fetch-svc.mjs dist
 
-      - name: Urcă pluginurile
+      - name: Urcă pluginurile și repornește
         if: steps.check.outputs.ok == 'true'
         env:
-          SFTP_HOST: ${{ secrets.SFTP_HOST }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
-          SFTP_USER: ${{ secrets.SFTP_USER }}
-          SFTP_PASS: ${{ secrets.SFTP_PASS }}
-          PANEL_URL: ${{ secrets.PANEL_URL }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
           PANEL_API_KEY: ${{ secrets.PANEL_API_KEY }}
         run: |
-          EXTRA=""
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.restart }}" = "false" ]; then
-            EXTRA="--no-restart"
+          ARGS="--file dist/Gicu.jar:plugins/Gicu.jar --verify"
+          if [ -f dist/simple-voice-chat.jar ]; then
+            ARGS="$ARGS --file dist/simple-voice-chat.jar:plugins/simple-voice-chat.jar"
           fi
-          node scripts/deploy-panel.js \
-            --file dist/Gicu.jar:plugins/Gicu.jar \
-            $([ -f dist/simple-voice-chat.jar ] && echo "--file dist/simple-voice-chat.jar:plugins/simple-voice-chat.jar") \
-            $EXTRA
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.restart }}" = "false" ]; then
+            ARGS="$ARGS --no-restart"
+          else
+            ARGS="$ARGS --restart"
+          fi
+          node scripts/deploy-api.js $ARGS
 
       - name: Sumar
         if: always()
         run: |
-          echo "### Deploy Gicu" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "- plugin: \`plugins/Gicu.jar\`" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f dist/simple-voice-chat.jar ]; then
-            echo "- voice chat: \`plugins/simple-voice-chat.jar\` ($(cat dist/svc-version.txt 2>/dev/null || echo '?'))" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Dacă serverul nu a repornit: deschide panoul → Console → Restart." >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "### Deploy Gicu"
+            echo ""
+            echo "- plugin: \`plugins/Gicu.jar\`"
+            if [ -f dist/simple-voice-chat.jar ]; then
+              echo "- voice chat: \`plugins/simple-voice-chat.jar\` ($(cat dist/svc-version.txt 2>/dev/null || echo '?'))"
+            else
+              echo "- voice chat: neinstalat (descărcarea a eșuat sau a fost oprită)"
+            fi
+            echo ""
+            echo "Dacă serverul nu a repornit: panou → Console → Restart."
+          } >> "$GITHUB_STEP_SUMMARY"
